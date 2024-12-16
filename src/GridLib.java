@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class GridLib {
     // Make the print easier to look at it
-    public static void Print(HashMap<Integer, HashMap<Integer, Integer>> Hash, ArrayList<String> NumberType) {
+    public static void Print(HashMap<Integer, HashMap<Integer, Integer>> Hash, ArrayList<String> NumberType, HashMap<Integer, HashMap<Integer, Integer>> FlagSlot) {
         int IncrX = 1;
         int IncrZ = 1;
 
@@ -36,7 +36,12 @@ public class GridLib {
                 if (val == -1) {
                     NumList = NumList + NumberType.get(0);
                 }else if (val == -2) {
-                    NumList = NumList + NumberType.get(1);
+                    if (DoesExists(FlagSlot, IncrX, IncrZ)) {
+                        NumList = NumList + NumberType.get(2);
+                    }else {
+                        NumList = NumList + NumberType.get(1);
+                    }
+
                 } else {
                     NumList = NumList + val;
                 }
@@ -76,17 +81,28 @@ public class GridLib {
         return ResNum;
     }
 
-    public static void Flag(ArrayList<GridSlot> FlagSlot, int PosX, int PosZ) {
+    public static void Flag(HashMap<Integer, HashMap<Integer, Integer>> FlagSlot, int PosX, int PosZ) {
         boolean fond = false;
-        for (GridSlot v : FlagSlot) {
-            if (v.X == PosX && v.Z == PosZ) {
+
+        if (FlagSlot.get(PosX) != null) {
+            if (FlagSlot.get(PosX).get(PosZ) != null) {
                 fond = true;
-                break;
             }
         }
 
-        if (fond) {
-            
+        if (!fond) {
+            if (FlagSlot.get(PosX) == null) {
+                FlagSlot.put(PosX, new HashMap<Integer, Integer>());
+            }
+
+            HashMap<Integer, Integer> HashX = FlagSlot.get(PosX);
+
+            HashX.put(PosZ, 1);
+
+        } else {
+            HashMap<Integer, Integer> HashX = FlagSlot.get(PosX);
+
+            HashX.remove(PosZ);
         }
     }
 

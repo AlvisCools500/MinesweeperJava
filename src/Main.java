@@ -25,7 +25,7 @@ public class Main {
         HashMap<Integer, HashMap<Integer, Integer>> DataGrid = ResGrid.DataGrid;
         HashMap<Integer, HashMap<Integer, Integer>> GameGrid = ResGrid.GameGrid;
         ArrayList<GridSlot> MinesSlot = ResGrid.MineSlot;
-        ArrayList<GridSlot> FlagSlot = new ArrayList<>();
+        HashMap<Integer, HashMap<Integer, Integer>> FlagSlot = new HashMap<>();
 
         Random rand = new Random();
 
@@ -33,7 +33,7 @@ public class Main {
 
         NumberType.add("M"); // Mine [0]
         NumberType.add("="); // Grass [1]
-        NumberType.add("F"); // Flag [2]
+        NumberType.add("*"); // Flag [2]
         String ResultSTR = "Command Example: x1z2";
 
         GridLib.Mine(GameGrid, DataGrid, ResGrid.StartSlotX, ResGrid.StartSlotZ);
@@ -41,7 +41,7 @@ public class Main {
         boolean FlagMode = false;
 
         while (true) {
-            GridLib.Print(GameGrid, NumberType);
+            GridLib.Print(GameGrid, NumberType, FlagSlot);
             System.out.println(ResultSTR);
             String input = scan.nextLine();
 
@@ -56,12 +56,14 @@ public class Main {
             if (input.equalsIgnoreCase("end")  || input.equalsIgnoreCase("End") ) {
                 break;
             } else if (input.equals("reveal")) {
-                GridLib.Print(DataGrid, NumberType);
+                GridLib.Print(DataGrid, NumberType, FlagSlot);
             } else if (input.equals("flag")) {
                 if (FlagMode) {
                     FlagMode = false;
+                    ResultSTR = "Flag Off";
                 }else {
                     FlagMode = true;
+                    ResultSTR = "Flag On";
                 }
             } else {
                 // Get the Position from Input
@@ -85,15 +87,17 @@ public class Main {
                         NumAdd = MySTR + NumAdd;
                     }
 
-                    ResultSTR = "Mined x" + TargX + " z" + TargZ;
+
 
 
                 }
 
                 if (FlagMode) {
                     GridLib.Flag(FlagSlot, TargX, TargZ);
+                    ResultSTR = "Flagged x" + TargZ + " z" + TargX;
                 } else {
                     GridLib.Mine(GameGrid, DataGrid, TargX, TargZ);
+                    ResultSTR = "Mined x" + TargZ + " z" + TargX;
                 }
 
             }
